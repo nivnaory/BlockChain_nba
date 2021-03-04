@@ -106,11 +106,24 @@ contract NBA_gembller{
           }
         }
     }
-      function createBattle(string memory userName)public  {
-        gamblingBattles[GamblingBattleNum].userGamble1= userGambles[userName];
-        gamblingBattles[GamblingBattleNum].userGamble2= userWaits;
-        userWaits.valid=false;
+      function createBattle(string memory userName)public  {    
+        gamblingBattles[GamblingBattleNum].userGamble1= userGambles[userName];  //get the userGamble1
+        if ( gamblingBattles[GamblingBattleNum].userGamble1.initialPrice==0){
+        gamblingBattles[GamblingBattleNum].userGamble2= userWaits_0;//get the usergamble2
+        userWaits_0.valid=false;
         GamblingBattleNum+=1;
+        
+        }else if(gamblingBattles[GamblingBattleNum].userGamble1.initialPrice==500){
+        gamblingBattles[GamblingBattleNum].userGamble2= userWaits_500;//get the usergamble2   
+        userWaits_0.valid=false;
+        GamblingBattleNum+=1;
+
+        }else{
+          gamblingBattles[GamblingBattleNum].userGamble2= userWaits_1000;//get the usergamble2
+          userWaits_1000.valid=false;
+          GamblingBattleNum+=1;
+        }
+        
       }
     //   // function addUserToWhoWantToGambller() public {
     //   //     /*add to userWhoWantToGambller the users that are online*/
