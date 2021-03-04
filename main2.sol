@@ -17,7 +17,7 @@ contract NBA_gembller{
       uint pointes;
       uint blocks;
       uint steals;
-      uint rank;
+      uint price;
     }
     
     
@@ -25,6 +25,7 @@ contract NBA_gembller{
         User user;
         BPlayer []  players;
         uint gambleSum; 
+        uint initialPrice;
         bool valid;
     }
     
@@ -40,12 +41,20 @@ contract NBA_gembller{
       mapping(string => User) usersMapping;
       mapping(uint => GamblingBattle) gamblingBattles;
       mapping(string => bool) userExists;
-      UserGamble userWaits;
+      UserGamble userWaits_0;
+      UserGamble userWaits_500;
+      UserGamble userWaits_1000;
+
         
 
       constructor() {
         GamblingBattleNum=0;
-        userWaits.valid=false;
+        userWaits_0.valid=false;
+        userWaits_500.valid=false;
+        userWaits_1000.valid=false;
+        userWaits_0.initialPrice=0;
+        userWaits_500.initialPrice=0;
+        userWaits_1000.initialPrice=0;
       } 
       
           
@@ -61,35 +70,42 @@ contract NBA_gembller{
         usersMapping[username]=_user;
         userExists[_user.username] = true;  
         }
-     
-    function addUserGambling(string memory username) public  {        
-          BPlayer memory _player1=BPlayer("wade1",1,1,1,1,1,1);
-          BPlayer memory _player2=BPlayer("wade2",1,1,1,1,1,1);
-          BPlayer memory _player3=BPlayer("wade3",1,1,1,1,1,1);
-          BPlayer memory _player4=BPlayer("wade4",5,1,1,1,1,1);
-          BPlayer memory _player5=BPlayer("wade5",1,1,1,1,1,1);
-          
-          User memory _user=usersMapping[username];
-          uint _gambleSum=6;
-          
-          userGambles[username].user=_user;
-          userGambles[username].players.push(_player1);
-          userGambles[username].players.push(_player2);
-          userGambles[username].players.push(_player3);
-          userGambles[username].players.push(_player4);
-          userGambles[username].players.push(_player5);
-          
-          userGambles[username].gambleSum=_gambleSum;
+
+    function addPlayerToUser(string memory username, string memory playerName,
+    uint rebounds,uint asists,uint point ,uint blocks,uint steals,uint price) public 
+      {
+      BPlayer memory _player=BPlayer(playerName,rebounds,asists,point,blocks,steals,price);
+      userGambles[username].players.push(_player);
+
+      }
+    function addUserGambling(string memory username,uint _initalPrice) public  {        
+          userGambles[username].initialPrice=_initalPrice;
           userGambles[username].valid=true;
-          if (userWaits.valid==false){
-              userWaits=userGambles[_user.username];
+          User memory _user=usersMapping[username];
+          //userGambles[username].gambleSum=calculateGamblePriceWinner();
+          if(userGambles[username].initialPrice==userWaits_0.initialPrice){
+               if (userWaits_0.valid==false){
+               userWaits_0=userGambles[_user.username];
           }else{
-              createBattle(_user.username);
+             createBattle(_user.username);
+           }
+
+          }else if(userGambles[username].initialPrice==userWaits_500.initialPrice){
+            if (userWaits_500.valid==false){
+               userWaits_500=userGambles[_user.username];
+          }else{
+             createBattle(_user.username);
+           }
+          
+          
+          }else{
+            if (userWaits_1000.valid==false){
+               userWaits_1000=userGambles[_user.username];
+          }else{
+             createBattle(_user.username);
           }
-      
-    // //     //  require(userGambles[_user.username].gambleSum==6,"user have value of 6");
-    // //      // require(userGambles[_user.username].players[3].rebounds==1,"not good ");
         }
+    }
       function createBattle(string memory userName)public  {
         gamblingBattles[GamblingBattleNum].userGamble1= userGambles[userName];
         gamblingBattles[GamblingBattleNum].userGamble2= userWaits;
@@ -100,6 +116,7 @@ contract NBA_gembller{
     //   //     /*add to userWhoWantToGambller the users that are online*/
     //   // }
       function getGamblingBattle(uint battleNum)public view returns(GamblingBattle memory){
+         
           return gamblingBattles[battleNum];
       }
     }
