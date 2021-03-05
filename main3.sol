@@ -1,6 +1,6 @@
 
 // SPDX-License-Identifier: GPL-3.0  
-
+/*
 pragma solidity >=0.7.0 < 0.8.0;
 pragma experimental ABIEncoderV2;
 
@@ -133,7 +133,7 @@ contract NBA_gembller{
         } 
       }
     
-      function getGamblingBattle(uint battleNum)public view returns(GamblingBattle memory ){
+      function getGamblingBattle(uint battleNum)public view returns(GamblingBattle memory){
           return gamblingBattles[battleNum];
       }
     
@@ -160,28 +160,30 @@ contract NBA_gembller{
    
       
       
-      function calculateDayStatisticsOfPlayer(uint gambllerNum,uint battleNum,uint rebounds,uint asists,uint point ,
-      uint blocks,uint steals) public 
+      function calculateDayStatisticsOfPlayer(uint battleNum,uint rebounds,uint asists,uint point ,
+      uint blocks,uint steals) 
       {
         GamblingBattle storage  battle = gamblingBattles[battleNum];
         uint score= rebounds*5+asists *5 +point *10 +blocks* 7+steals *8;
-        if (gambllerNum==1){
-          battle.scoreUserGamble1+=score; 
+        if (battleNum==1){
+          battle.userGamble1=score; 
         }else{
-           battle.scoreUserGamble2+=score; 
+           battle.userGamble2=score; 
         }
        
       }
       
-      function winner(uint battleNum) public view returns(UserGamble memory,bool)
+      function winner() public view returns(uint)
       {
-        GamblingBattle storage  battle = gamblingBattles[battleNum];
-         if(battle.scoreUserGamble1>battle.scoreUserGamble2){
-           return (battle.userGamble1,true);
-         }else if(battle.scoreUserGamble1< battle.scoreUserGamble2){
-           return (battle.userGamble2,true);
-         }
-           return (battle.userGamble1,false);
-          
-    }
+        if (scoreOfGambller1>scoreOfGambller2){
+          //gambller 1 win decide what to do
+          return scoreOfGambller1;
+        }else if(scoreOfGambller1<scoreOfGambller2){
+           //gambller 2 win decide what to do
+           return scoreOfGambller2;
+        }
+        return 1;
+      }
+
 }
+*/
